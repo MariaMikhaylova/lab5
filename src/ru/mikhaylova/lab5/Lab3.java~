@@ -1,0 +1,148 @@
+
+package ru.mikhaylova.lab3;
+
+import java.io.*;
+import java.util.*;
+
+public class Lab3 {
+
+    private static List<EquationOfTheHyperPlane> list;
+
+    private static void init() { // создание и заполнение списка
+        list = new ArrayList<>();
+        list.add(new PointEq(4, 8));
+        list.add(new PointEq(5, 2));
+        list.add(new Line(3, 4, 3));
+        list.add(new Plane(5, 4, 3, 6));
+        list.add(new ThreeDimensionalPlane(2, 8, 4, 6, 2));
+        list.add(new ThreeDimensionalPlane(2, 4, 6, 6, 1));
+        list.add(new ThreeDimensionalPlane(1, 8, 4, 2, 2));
+        list.add(new Plane(1, 4, 1, 4));
+        list.add(new Line(1, 7, 2));
+        list.add(new Line(5, 2, 3));
+        list.add(new PointEq(6, 7));
+    }
+
+    public static void main(String[] args) throws IOException {
+        init();
+// подготовка к вводу
+        InputStreamReader isr = new InputStreamReader(System.in);
+        BufferedReader br = new BufferedReader(isr);
+        for (;;) { // начинаем бесконечный цикл
+            System.out.println();
+            System.out.println("Выберите тип сортировки (выйти - пустая строка):");
+            System.out.println("--------------------------------------------------");
+            System.out.println("1 - по возраcтанию id");
+            System.out.println("2 - по убыванию id");
+            System.out.println("3 - по возраcтанию имени");
+            System.out.println("4 - по убыванию имени");
+            System.out.println("5 - по возрастанию размерности пространства");
+            System.out.println("6 - по убыванию размерности пространства");
+            System.out.println("7 - проверить принадлежность точки");
+            System.out.println("8 - проходит ли через начало координат");
+            System.out.println("9 - параллельный перенос");
+            System.out.println("10 - семмитричный перенос относительно начала координат");
+            System.out.println("--------------------------------------------------");
+            String mode = br.readLine(); // читаем строку из буфера ввода
+            if (mode.isEmpty()) {
+                break; // прерываем цикл, если строка пустая
+            }
+            boolean sortUp = false;
+            int sortMode = 0;
+            switch (mode) {
+                case "1": {
+                    sortUp = false;
+                    sortMode = 0;
+                    break;
+                }
+                case "2": {
+                    sortUp = true;
+                    sortMode = 0;
+                    break;
+                }
+                case "3": {
+                    sortUp = false;
+                    sortMode = 1;
+                    break;
+                }
+                case "4": {
+                    sortUp = true;
+                    sortMode = 1;
+                    break;
+                }
+                case "5": {
+                    sortUp = false;
+                    sortMode = 2;
+                    break;
+                }
+                case "6": {
+                    sortUp = true;
+                    sortMode = 2;
+                    break;
+                }
+                case "7": {
+                    System.out.println("Введите координаты x,y,z,t через Enter");
+                    Scanner sc = new Scanner(System.in);
+                    double x = sc.nextDouble();
+                    double y = sc.nextDouble();
+                    double z = sc.nextDouble();
+                    double t = sc.nextDouble();
+                    Point p = new Point(x, y, z, t);
+                    for (int i = 0; i < 11; i++) {
+                        EquationOfTheHyperPlane e = (EquationOfTheHyperPlane) list.get(i);
+                        String s = "проходит через заданную точку";
+                        if (!e.isLocate(p)) {
+                            s = "не " + s;
+                        }
+                        System.out.println(list.get(i).toString() + ": " + s);
+                    }
+                    break;
+                }
+                case "8": {
+                    for (int i = 0; i < 11; i++) {
+                        EquationOfTheHyperPlane e = (EquationOfTheHyperPlane) list.get(i);
+                        String s1 = "проходит через начало координат";
+                        if (!e.ownedToOrigin()) {
+                            s1 = "не " + s1;
+                        }
+                        System.out.println(list.get(i).toString() + ": " + s1);
+                    }
+                    break;
+                }
+                case "9": {
+                    System.out.println("Введите координаты x,y,z,t через Enter");
+                    Scanner sc = new Scanner(System.in);
+                    double x = sc.nextDouble();
+                    double y = sc.nextDouble();
+                    double z = sc.nextDouble();
+                    double t = sc.nextDouble();
+                    Point p = new Point(x, y, z, t);
+                    for (int i = 0; i < 11; i++) {
+                        EquationOfTheHyperPlane e = (EquationOfTheHyperPlane) list.get(i);
+
+                        e.parallel(p);
+                    }
+                    break;
+
+
+                }
+
+                case "10": {
+                    for (int i = 0; i < 11; i++) {
+                        EquationOfTheHyperPlane e = (EquationOfTheHyperPlane) list.get(i);
+                        e.summet(e);
+                    }
+                    break;
+                }
+            }
+
+
+            if (!"7".equals(mode) && !"8".equals(mode) && !"9".equals(mode) && !"10".equals(mode)) {
+                Collections.sort(list, new SortMode(sortUp, sortMode));
+                for (EquationOfTheHyperPlane p : list) {
+                    System.out.println(p);
+                }
+            }
+        }
+    }
+}

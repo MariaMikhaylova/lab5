@@ -1,0 +1,6 @@
+package ru.mikhaylova.lab4;
+
+public interface ParallelTransfer {
+
+    void parallel(Point p);
+}

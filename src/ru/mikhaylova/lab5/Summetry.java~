@@ -1,0 +1,6 @@
+package ru.mikhaylova.lab4;
+
+public interface Summetry {
+
+    void summet(EquationOfTheHyperPlane e);
+}
